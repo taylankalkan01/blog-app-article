@@ -1,6 +1,6 @@
 import mongoose, { ConnectOptions } from "mongoose";
 
-const MONGO_URL = process.env.MONGO_URL || ""
+const MONGO_URL = process.env.MONGO_URL || "";
 mongoose.set("strictQuery", false);
 
 export const connectDB = async () => {

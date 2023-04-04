@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 require('dotenv').config();
 
 // Custom Modules, Packages, Configs, etc.
+import { connectDB } from "./databases/mongoDB";
 
 
 //Application
@@ -13,8 +14,8 @@ app.use(cookieParser());
 
 //healthcheck
 app.get("/healthcheck", (_, res:Response) => {
-  res.status(200).json("healthcheck");
+  res.status(200).json({error:false,message:"healthcheck"});
 });
 
-
+connectDB()
 export default app;

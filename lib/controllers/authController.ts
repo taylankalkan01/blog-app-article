@@ -11,12 +11,21 @@ const registerUser = async (req: Request, res: Response) => {
     //validation
     registerUserInput.parse(req.body);
 
-    //check if email is exist
+    //check if email is exist -> email must be unique
     const user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({
         error: true,
         message: "You cannot register, Email already exist"
+      });
+    }
+
+    //check if username is exist -> username must be unique
+    const username = await User.findOne({userName})
+    if (username) {
+      return res.status(400).json({
+        error: true,
+        message: "You cannot register, username already exist"
       });
     }
 

@@ -5,6 +5,7 @@ require("dotenv").config();
 
 // Custom Modules, Packages, Configs, etc.
 import { connectDB } from "./databases/mongoDB";
+import { initRoutes } from "./routes/routes";
 
 //Application
 const app: Application = express();
@@ -17,4 +18,5 @@ app.get("/healthcheck", (_, res: Response) => {
 });
 
 connectDB();
+initRoutes(app);
 export default app;

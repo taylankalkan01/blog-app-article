@@ -1,6 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response} from "express";
 import Profile from "../models/Profile";
 import User from "../models/User";
+import { CustomRequest } from "../middlewares/verifyToken";
+import mongoose from "mongoose";
 
 //view profile
 const getProfileById = async (req: Request, res: Response) => {
@@ -38,6 +40,44 @@ const getProfileById = async (req: Request, res: Response) => {
   }
 };
 
+
+
+export const createProfile = async (req:Request, res:Response) => {
+  const {bio,image} = req.body
+  const token = (req as CustomRequest).token;
+  let userID: mongoose.Types.ObjectId;
+
+  try {
+    
+    if (typeof token === "string") {
+      throw new Error("Invalid token");
+    }
+    userID = new mongoose.Types.ObjectId(token.user);
+
+    const newProfile = new Profile({
+      user: userID,
+      bio,
+      image,
+      followers:[]
+    })
+
+    const data = await newProfile.save()
+    
+    res.status(200).json({
+      error: false,
+      message: "User Profile created Succesfully!",
+      data: data
+    });
+    
+  } catch (err) {
+    res.status(500).json({
+      error: true,
+      message: `${process.env.NODE_ENV === "production" ? null : err}`
+    });
+  }
+}
+
 export default {
-  getProfileById
+  getProfileById,
+  createProfile
 };

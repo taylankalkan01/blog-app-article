@@ -21,7 +21,7 @@ const registerUser = async (req: Request, res: Response) => {
     }
 
     //check if username is exist -> username must be unique
-    const username = await User.findOne({userName})
+    const username = await User.findOne({ userName });
     if (username) {
       return res.status(400).json({
         error: true,
@@ -84,8 +84,10 @@ const loginUser = async (req: Request, res: Response) => {
     if (!token) {
       return res
         .status(400)
-        .json({ error: true, message: `cannot generate token for user: ${emailOrUsername}` });
-      
+        .json({
+          error: true,
+          message: `cannot generate token for user: ${emailOrUsername}`
+        });
     }
 
     //send cookie

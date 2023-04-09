@@ -43,7 +43,9 @@ const getProfileById = async (req: Request, res: Response) => {
 
 
 export const createProfile = async (req:Request, res:Response) => {
-  const {bio,image} = req.body
+  const {bio} = req.body
+  const file = req.file;
+
   const token = (req as CustomRequest).token;
   let userID: mongoose.Types.ObjectId;
 
@@ -57,7 +59,7 @@ export const createProfile = async (req:Request, res:Response) => {
     const newProfile = new Profile({
       user: userID,
       bio,
-      image,
+      image:file?.path,
       followers:[]
     })
 

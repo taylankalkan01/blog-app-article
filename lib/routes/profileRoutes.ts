@@ -7,5 +7,6 @@ const router = Router();
 
 router.get("/:userID", profileController.getProfileById);
 router.post("/", verifyToken, uploadImage, profileController.createProfile);
+router.put("/", verifyToken, uploadImage, profileController.updateProfile);
 
 export default router;

@@ -40,7 +40,7 @@ const getProfileById = async (req: Request, res: Response) => {
   }
 };
 
-export const createProfile = async (req: Request, res: Response) => {
+const createProfile = async (req: Request, res: Response) => {
   const { bio } = req.body;
   const file = req.file;
 
@@ -75,7 +75,51 @@ export const createProfile = async (req: Request, res: Response) => {
   }
 };
 
+const updateProfile = async (req: Request, res: Response) => {
+  const { bio } = req.body;
+  const file = req.file;
+  const token = (req as CustomRequest).token;
+
+  try {
+
+    if (typeof token === "string") {
+      throw new Error("Invalid token");
+    }
+    const userID = new mongoose.Types.ObjectId(token.user);
+    
+    const profile = await Profile.findOne({ user: userID }); 
+    if (!profile) {
+      return res.status(404).json({
+        error: true,
+        message: "Profile not found",
+      });
+    }
+    const data = await Profile.findByIdAndUpdate(
+      profile._id,
+      {
+        $set: {
+          bio,
+          image: file?.path,
+        },
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      error: false,
+      message: "User Profile updated Succesfully!",
+      data: data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: true,
+      message: `${process.env.NODE_ENV === "production" ? null : err}`,
+    });
+  }
+};
+
 export default {
   getProfileById,
-  createProfile
+  createProfile,
+  updateProfile
 };
